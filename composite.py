@@ -23,6 +23,7 @@ def water_logo():
 	for item in dirs:
 		if os.path.isfile(path+item):
 			img = Image.open(path+item)
+			img = img.convert('RGB')
 			w,h = img.size
 			offset =(0, h-lg_h)
 			pos = (lg_w+1, h-lg_h+12)
@@ -40,22 +41,26 @@ def add_watermark(img, text, out_file, pos):
 	img.save(out_file, 'JPEG')
 	
 def avg_img_color(img,_pos):
-    width, height = (_pos[0]+12,_pos[1]+12)
-
-    r_total = 0
-    g_total = 0
-    b_total = 0
-
-    count = 0
-    for x in range(_pos[0], width):
-        for y in range(_pos[1], height):
-            r, g, b = img.getpixel((x,y))
-            r_total += r
-            g_total += g
-            b_total += b
-            count += 1
-
-    return ((int)(r_total/count), (int)(g_total/count), (int)(b_total/count))
+	width, height = (_pos[0]+12,_pos[1]+12)
+	
+	r_total = 0
+	g_total = 0
+	b_total = 0
+	
+	try:
+		count = 0
+		for x in range(_pos[0], width):
+			for y in range(_pos[1], height):
+				r, g, b = img.getpixel((x,y))
+				r_total += r
+				g_total += g
+				b_total += b
+				count += 1
+	except Exception:
+		print('An Error Has Occered!')
+		return (100,100,0)
+	
+	return ((int)(r_total/count), (int)(g_total/count), (int)(b_total/count))
  
 if __name__ == '__main__':
 	water_logo()
